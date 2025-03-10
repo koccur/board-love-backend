@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { EventGame } from '../event/event.entity';
 
 @Entity()
 export class Spot {
@@ -23,4 +24,6 @@ export class Spot {
   @Column({ nullable: true })
   closeHour: number;
   
+  @OneToMany(() => EventGame, (event) => event.spot)
+  eventGames: EventGame[];
 }

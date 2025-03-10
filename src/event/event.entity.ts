@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTabl
 import { User } from '../user/user.entity';
 import { Game } from '../game/game.entity';
 import { IsDate, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { Spot } from '../spot/spot.entity';
 
 @Entity({ name: 'eventGamme' })
 export class EventGame {
@@ -36,6 +37,10 @@ export class EventGame {
   @ManyToMany(() => User, (user)=>user.eventGames)
   @JoinTable()
   participants?: User[];
-  // todo location as a field
-  // connected to table locations
+
+  @Column({ type: 'boolean', default: false })
+  isPrivate: boolean;
+
+  @ManyToOne(() => Spot, (location) => location.eventGames, { nullable: true, onDelete: 'CASCADE' })
+  spot: Spot;
 }

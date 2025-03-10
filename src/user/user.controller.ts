@@ -8,25 +8,21 @@ import { Game } from '../game/game.entity';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // Create a new user
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
   }
 
-  // Get all users
   @Get()
   async findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
-  // Get a single user by ID
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<User> {
     return this.userService.findOne(id);
   }
 
-  // Update an existing user
   @Put(':id')
   async update(
     @Param('id') id: number,
@@ -35,7 +31,6 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
-  // Delete a user
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<void> {
     return this.userService.remove(id);

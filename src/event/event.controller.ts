@@ -9,7 +9,6 @@ export class EventController {
 
   @Post()
   async createEvent(@Body() dto: CreateEventDto): Promise<EventGame> {
-    debugger;
     return this.eventService.createEvent(dto);
   }
 
@@ -35,7 +34,6 @@ export class EventController {
 
   @Post(':id/assign-participants')
   async assignParticipants(@Param('id') eventId: number, @Body('userIds') userIds: number[]): Promise<EventGame> {
-    debugger;
     return this.eventService.assignParticipants(eventId, userIds);
   }
 }

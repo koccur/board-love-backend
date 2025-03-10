@@ -8,7 +8,7 @@ export const dataSourceOptions:DataSourceOptions = {
     username: "postgres",
     password: "admin666ADMIN123",
     database: "boardlove_db",
-    entities: ["build/**/*.entity{.ts,.js}"],
+    entities: ["build/**/*.entity.js}"],
     migrations: ['src/migrations/*.ts'],
     synchronize: true, // ❌ Disable in production
     logging: true,

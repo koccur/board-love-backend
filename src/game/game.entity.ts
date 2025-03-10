@@ -14,7 +14,7 @@ export class Game {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToOne(() => GameGenre, { eager: true }) // Links to GameGenre table
+  @ManyToOne(() => GameGenre, { eager: true }) 
   @JoinColumn({name:'game_genre'})
   genre: GameGenre;
 
@@ -32,7 +32,6 @@ export class Game {
   @Max(99)
   ageRestriction: number;
 
-  // Any user can assign a game as their own
   @ManyToMany(() => User, (user) => user.ownedGames)
   users: User[];
 }

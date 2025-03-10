@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game } from '../game/game.entity';
 import { User } from '../user/user.entity';
 import { EventGame } from './event.entity';
+import { Spot } from '../spot/spot.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EventGame, User, Game])],
+  imports: [TypeOrmModule.forFeature([EventGame, User, Game,Spot])],
   controllers: [EventController],
   providers: [EventService]
 })

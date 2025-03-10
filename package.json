@@ -14,7 +14,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli",
-    "typeorm:migrate:generate": "npm run typeorm migration:generate -- -d src/data-source.ts",
+    "typeorm migrate:generate": "npm run typeorm migration:generate -- -d src/data-source.ts",
     "orm":"npm run typeorm:migrate:generate -- src/migrations/InitialSchema",
     "orm:run":"npm run typeorm migration:run -- -d src/data-source.ts",
     "orm:new":"npm run typeorm migration:generate -- src/migration/CreateEventTable -d src/data-source.ts",
@@ -85,3 +85,5 @@
     "testEnvironment": "node"
   }
 }
+
+

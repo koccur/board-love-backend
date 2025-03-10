@@ -15,7 +15,7 @@ export enum BoardGameGenres {
   WORD = 'WORD',
 }
 
-@Entity({ name: 'game_genre' }) // Creates 'game_genre' table
+@Entity({ name: 'game_genre' }) 
 export class GameGenre {
   @PrimaryGeneratedColumn()
   id: number;
