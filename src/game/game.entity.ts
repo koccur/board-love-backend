@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinColu
 import { GameGenre } from './game-genre.entity';
 import { User } from '../user/user.entity';
 import { Max, Min } from 'class-validator';
+import { EventGame } from '../event/event.entity';
 
 @Entity({name:'game'})
 export class Game {
@@ -34,5 +35,8 @@ export class Game {
 
   @ManyToMany(() => User, (user) => user.ownedGames)
   users: User[];
+
+  @ManyToMany(() => EventGame, (eventGame) => eventGame.games)
+  eventGames: EventGame[];
 }
 

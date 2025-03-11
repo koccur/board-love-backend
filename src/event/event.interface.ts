@@ -23,14 +23,15 @@ export class CreateEventDto {
   organizerId: number;
 
   @IsOptional()
-  @IsInt()
-  gameId?: number;
+  @IsArray()
+  @IsInt({ each: true })
+  gameIds?: number[];
 
   @IsBoolean()
   isPrivate:boolean;
 
   @IsArray()
-  participansIds: number[];
+  participantsIds: number[];
 
   @IsOptional()
   @IsInt()
@@ -57,15 +58,16 @@ export class UpdateEventDto {
   maxParticipants?: number;
 
   @IsOptional()
-  @IsInt()
-  gameId?: number;
+  @IsArray()
+  @IsInt({ each: true })
+  gameIds?: number[];
 
   @IsOptional()
   @IsInt()
   spotId?:number;
 
   @IsArray()
-  participansIds: User[];
+  participantsIds: User[];
   @IsBoolean()
   isPrivate:boolean;
 

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { EventGame } from './event.entity';
 import { User } from '../user/user.entity';
 import { Game } from '../game/game.entity';
@@ -22,16 +22,34 @@ export class EventService {
     if (!organizer) {
       throw new NotFoundException(`User with ID ${dto.organizerId} not found`);
     }
+    const spot = await this.spotRepositiory.findOneBy({ id: dto.spotId });
+
+    if (!spot) {
+      throw new NotFoundException(`Spot with ID ${dto.spotId} not found`);
+    }
+
+    const participants = await this.userRepository.findByIds(dto.participantsIds);
+
+    if (participants.length !== dto.participantsIds.length) {
+      throw new NotFoundException(`Participants with ID ${dto.participantsIds.map(el=>el)} not found`);
+    }
+
     debugger;
-    const event = this.eventRepository.create({
-      ...dto,
-      organizer: { id: dto.organizerId },
-      game: { id: dto.gameId },
-      participants: dto.participansIds?.map(id => ({ id:id })),
-      spot: { id: dto.spotId }
-    });
-    // spot and participans doenst work
-    debugger;
+    const eventGame = new EventGame();
+    eventGame.date = dto.date;
+    eventGame.description = dto.description;
+    eventGame.title = dto.title;
+    eventGame.organizer = organizer;
+    eventGame.spot = spot;
+    eventGame.isPrivate = dto.isPrivate;
+    eventGame.maxParticipants = dto.maxParticipants;
+    eventGame.participants = participants;
+    
+    if (dto.gameIds && dto.gameIds.length) {
+      eventGame.games = await this.gameRepository.findByIds(dto.gameIds);
+    }
+
+    const event = this.eventRepository.create(eventGame);
     return this.eventRepository.save(event);
   }
 
@@ -40,7 +58,7 @@ export class EventService {
   }
 
   async getEventById(id: number): Promise<EventGame> {
-    const event = await this.eventRepository.findOne({ where: { id }, relations: ['organizer', 'participants'] });
+    const event = await this.eventRepository.findOne({ where: { id }, relations: ['organizer', 'participants','spot','games'] });
     if (!event) throw new NotFoundException(`Event with ID ${id} not found`);
     return event;
   }
@@ -48,15 +66,15 @@ export class EventService {
   async updateEvent(id: number, dto: UpdateEventDto): Promise<EventGame> {
     const event = await this.getEventById(id);
 
-    if (dto.gameId) {
-      const game = await this.gameRepository.findOne({ where: { id: dto.gameId } });
-      if (!game) throw new NotFoundException('Game not found');
-      event.game = game;
-    }
+    // if (dto.gameIds) {
+    //   const game = await this.gameRepository.findOne({ where: { id: dto.gameIds } });
+    //   if (!game) throw new NotFoundException('Game not found');
+    //   event.games = game;
+    // }
 
-    if (dto.participansIds) {
-      const pariticipains = await this.userRepository.findByIds(dto.participansIds);
-      if (pariticipains.length !== dto.participansIds.length) {
+    if (dto.participantsIds) {
+      const pariticipains = await this.userRepository.findByIds(dto.participantsIds);
+      if (pariticipains.length !== dto.participantsIds.length) {
         throw new NotFoundException('One or more users not found');
       }
       event.participants = pariticipains;

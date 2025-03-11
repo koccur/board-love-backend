@@ -31,8 +31,9 @@ export class EventGame {
   @JoinTable({name:'organizerId'})
   organizer: User;
 
-  @ManyToOne(() => Game, { nullable: true, eager: true })
-  game?: Game;
+  @ManyToMany(() => Game, (game) => game.eventGames, { cascade: true })
+  @JoinTable()
+  games: Game[];
 
   @ManyToMany(() => User, (user)=>user.eventGames)
   @JoinTable()
