@@ -32,7 +32,6 @@ export class User {
 
   @OneToMany(() => EventGame, (event) => event.organizer)
   events: EventGame[];
-  //todo popraw nazwe
 
   @ManyToMany(() => EventGame, (eventGame) => eventGame.participants)
   eventGames: EventGame[];

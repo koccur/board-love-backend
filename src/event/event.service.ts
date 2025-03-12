@@ -34,7 +34,6 @@ export class EventService {
       throw new NotFoundException(`Participants with ID ${dto.participantsIds.map(el=>el)} not found`);
     }
 
-    debugger;
     const eventGame = new EventGame();
     eventGame.date = dto.date;
     eventGame.description = dto.description;
@@ -66,11 +65,11 @@ export class EventService {
   async updateEvent(id: number, dto: UpdateEventDto): Promise<EventGame> {
     const event = await this.getEventById(id);
 
-    // if (dto.gameIds) {
-    //   const game = await this.gameRepository.findOne({ where: { id: dto.gameIds } });
-    //   if (!game) throw new NotFoundException('Game not found');
-    //   event.games = game;
-    // }
+    if (dto.gameIds) {
+      const game = await this.gameRepository.findByIds(dto.gameIds);
+      if (!game) throw new NotFoundException('One or more game not found');
+      event.games = game;
+    }
 
     if (dto.participantsIds) {
       const pariticipains = await this.userRepository.findByIds(dto.participantsIds);
