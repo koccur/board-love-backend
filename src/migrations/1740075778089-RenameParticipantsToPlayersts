@@ -1,0 +1,13 @@
+import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey, Table } from 'typeorm';
+
+export class RenameParticipantsToPlayers1740075778089 implements MigrationInterface {
+  name = "RenameParticipantsToPlayers1740075778089";
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "eventGamme" RENAME COLUMN "participants" TO "players"`);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "eventGamme" RENAME COLUMN "players" TO "participants"`);
+  }
+}

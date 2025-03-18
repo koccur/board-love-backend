@@ -40,4 +40,9 @@ export class GameController {
   assignGame(@Body() assignGameDto: AssignGameDto) {
     return this.gameService.assignGameToUser(assignGameDto);
   }
+
+  @Post('/unassign')
+  unassignGame(@Body() assignGameDto: AssignGameDto) {
+    return this.gameService.unassignGameFromUser(assignGameDto);
+  }
 }

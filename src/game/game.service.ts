@@ -35,7 +35,7 @@ export class GameService {
     await this.gameRepository.delete(id);
   }
 
-  async assignGameToUser(assignGameDto: AssignGameDto): Promise<User> {
+  async assignGameToUser(assignGameDto: AssignGameDto): Promise<boolean> {
     const { userId, gameId } = assignGameDto;
 
     const game = await this.gameRepository.findOne({ where: { id: gameId } });
@@ -49,7 +49,24 @@ export class GameService {
       await this.userRepo.save(user);
     }
 
-    return user;
+    return !!user;
+  }
+
+  async unassignGameFromUser(assignGameDto: AssignGameDto): Promise<boolean> {
+    const { userId, gameId } = assignGameDto;
+
+    const game = await this.gameRepository.findOne({ where: { id: gameId } });
+    if (!game) throw new NotFoundException('Game not found');
+
+    const user = await this.userRepo.findOne({ where: { id: userId }, relations: ['ownedGames']  });
+    if (!user) throw new NotFoundException('User not found');
+
+    if (user.ownedGames.some(g => g.id === gameId)) {
+      user.ownedGames = user.ownedGames.filter((game)=>game.id!==gameId);
+      await this.userRepo.save(user);
+    }
+
+    return !!user;
   }
 
 }

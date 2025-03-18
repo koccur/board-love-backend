@@ -37,7 +37,7 @@ export class EventGame {
 
   @ManyToMany(() => User, (user)=>user.eventGames)
   @JoinTable()
-  participants?: User[];
+  players?: User[];
 
   @Column({ type: 'boolean', default: false })
   isPrivate: boolean;

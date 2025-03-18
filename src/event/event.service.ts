@@ -28,10 +28,10 @@ export class EventService {
       throw new NotFoundException(`Spot with ID ${dto.spotId} not found`);
     }
 
-    const participants = await this.userRepository.findByIds(dto.participantsIds);
+    const players = await this.userRepository.findByIds(dto.playersIds);
 
-    if (participants.length !== dto.participantsIds.length) {
-      throw new NotFoundException(`Participants with ID ${dto.participantsIds.map(el=>el)} not found`);
+    if (players.length !== dto.playersIds.length) {
+      throw new NotFoundException(`Players with ID ${dto.playersIds.map(el=>el)} not found`);
     }
 
     const eventGame = new EventGame();
@@ -42,7 +42,7 @@ export class EventService {
     eventGame.spot = spot;
     eventGame.isPrivate = dto.isPrivate;
     eventGame.maxParticipants = dto.maxParticipants;
-    eventGame.participants = participants;
+    eventGame.players = players;
     
     if (dto.gameIds && dto.gameIds.length) {
       eventGame.games = await this.gameRepository.findByIds(dto.gameIds);
@@ -57,7 +57,7 @@ export class EventService {
   }
 
   async getEventById(id: number): Promise<EventGame> {
-    const event = await this.eventRepository.findOne({ where: { id }, relations: ['organizer', 'participants','spot','games'] });
+    const event = await this.eventRepository.findOne({ where: { id }, relations: ['organizer', 'players','spot','games'] });
     if (!event) throw new NotFoundException(`Event with ID ${id} not found`);
     return event;
   }
@@ -71,12 +71,12 @@ export class EventService {
       event.games = game;
     }
 
-    if (dto.participantsIds) {
-      const pariticipains = await this.userRepository.findByIds(dto.participantsIds);
-      if (pariticipains.length !== dto.participantsIds.length) {
+    if (dto.playersIds) {
+      const pariticipains = await this.userRepository.findByIds(dto.playersIds);
+      if (pariticipains.length !== dto.playersIds.length) {
         throw new NotFoundException('One or more users not found');
       }
-      event.participants = pariticipains;
+      event.players = pariticipains;
     }
 
     if (dto.spotId) {
@@ -94,9 +94,9 @@ export class EventService {
     await this.eventRepository.remove(event);
   }
 
-  async assignParticipants(eventId: number, userIds: number[]): Promise<EventGame> {
+  async assignPlayers(eventId: number, userIds: number[]): Promise<EventGame> {
     debugger;
-    const event = await this.eventRepository.findOne({ where: { id: eventId }, relations: ['participants'] });
+    const event = await this.eventRepository.findOne({ where: { id: eventId }, relations: ['players'] });
 
     if (!event) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
@@ -108,7 +108,7 @@ export class EventService {
       throw new NotFoundException('One or more users not found');
     }
 
-    event.participants = users;
+    event.players = users;
     return this.eventRepository.save(event);
   }
 }

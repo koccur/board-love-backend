@@ -31,7 +31,7 @@ export class CreateEventDto {
   isPrivate:boolean;
 
   @IsArray()
-  participantsIds: number[];
+  playersIds: number[];
 
   @IsOptional()
   @IsInt()
@@ -67,7 +67,7 @@ export class UpdateEventDto {
   spotId?:number;
 
   @IsArray()
-  participantsIds: User[];
+  playersIds: User[];
   @IsBoolean()
   isPrivate:boolean;
 

@@ -32,8 +32,8 @@ export class EventController {
     return this.eventService.deleteEvent(id);
   }
 
-  @Post(':id/assign-participants')
-  async assignParticipants(@Param('id') eventId: number, @Body('userIds') userIds: number[]): Promise<EventGame> {
-    return this.eventService.assignParticipants(eventId, userIds);
+  @Post(':id/assign-players')
+  async assignPlayers(@Param('id') eventId: number, @Body('userIds') userIds: number[]): Promise<EventGame> {
+    return this.eventService.assignPlayers(eventId, userIds);
   }
 }

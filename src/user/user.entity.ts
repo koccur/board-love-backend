@@ -33,7 +33,7 @@ export class User {
   @OneToMany(() => EventGame, (event) => event.organizer)
   events: EventGame[];
 
-  @ManyToMany(() => EventGame, (eventGame) => eventGame.participants)
+  @ManyToMany(() => EventGame, (eventGame) => eventGame.players)
   eventGames: EventGame[];
 
 }
