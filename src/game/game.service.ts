@@ -69,4 +69,38 @@ export class GameService {
     return !!user;
   }
 
+
+  async assignGameToFavListUser(assignGameDto: AssignGameDto): Promise<boolean> {
+    const { userId, gameId } = assignGameDto;
+
+    const game = await this.gameRepository.findOne({ where: { id: gameId } });
+    if (!game) throw new NotFoundException('Game not found');
+
+    const user = await this.userRepo.findOne({ where: { id: userId }, relations: ['favGames']  });
+    if (!user) throw new NotFoundException('User not found');
+
+    if (!user.favGames.some(g => g.id === gameId)) {
+      user.favGames.push(game);
+      await this.userRepo.save(user);
+    }
+
+    return !!user;
+  }
+
+  async unassignGameToFavListUser(assignGameDto: AssignGameDto): Promise<boolean> {
+    const { userId, gameId } = assignGameDto;
+
+    const game = await this.gameRepository.findOne({ where: { id: gameId } });
+    if (!game) throw new NotFoundException('Game not found');
+
+    const user = await this.userRepo.findOne({ where: { id: userId }, relations: ['favGames']  });
+    if (!user) throw new NotFoundException('User not found');
+
+    if (user.favGames.some(g => g.id === gameId)) {
+      user.favGames = user.favGames.filter((game)=>game.id!==gameId);
+      await this.userRepo.save(user);
+    }
+
+    return !!user;
+  }
 }

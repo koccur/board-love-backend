@@ -23,3 +23,9 @@ export class AssignGameDto {
   @IsInt()
   gameId: number;
 }
+
+export interface FriendUser{
+  id:number;
+  name: string;
+  // consider add game list
+}

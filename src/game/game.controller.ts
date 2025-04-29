@@ -45,4 +45,14 @@ export class GameController {
   unassignGame(@Body() assignGameDto: AssignGameDto) {
     return this.gameService.unassignGameFromUser(assignGameDto);
   }
+
+  @Post('/assignFav')
+  assignFavGame(@Body() assignGameDto: AssignGameDto) {
+    return this.gameService.assignGameToFavListUser(assignGameDto);
+  }
+
+  @Post('/unassignFav')
+  unassignFavGame(@Body() assignGameDto: AssignGameDto) {
+    return this.gameService.unassignGameToFavListUser(assignGameDto);
+  }
 }

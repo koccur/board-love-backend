@@ -30,10 +30,22 @@ export class User {
   @JoinTable()
   ownedGames: Game[];
 
+  @ManyToMany(() => Game, (game) => game.users)
+  @JoinTable()
+  favGames: Game[];
+
   @OneToMany(() => EventGame, (event) => event.organizer)
   events: EventGame[];
 
   @ManyToMany(() => EventGame, (eventGame) => eventGame.players)
   eventGames: EventGame[];
 
+  @ManyToMany(() => User, { cascade: ['insert', 'update'] }) 
+  @JoinTable({
+     name: 'user_friends',
+     joinColumn: { name: 'userId', referencedColumnName: 'id' },
+     inverseJoinColumn: { name: 'friendId', referencedColumnName: 'id' },
+   })
+   friends: User[];
 }
+

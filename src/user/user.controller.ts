@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto, UpdateUserDto } from './user.interface';
+import { CreateUserDto, FriendUser, UpdateUserDto } from './user.interface';
 import { Game } from '../game/game.entity';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
@@ -14,12 +14,24 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(@Query('name') name?: string): Promise<User[]> {
+    return this.userService.findAll(name);
+  }
+  @Get('/find-friends')
+  async findFriends(@Query('id') userId: number,
+    @Query('friendName') friendName: string): Promise<User[]> {
+    return this.userService.findFriends(friendName, userId);
+  }
+
+  // todo: via loggedToken not it and fix model
+  @Post(':id/add-friend')
+  async addFriend(@Param('id') id: number,
+  @Body() dto: any): Promise<User> {
+    return this.userService.addFriend(id,dto.friendId);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<User> {
+  async findOne(@Param('id') id: number): Promise<FriendUser> {
     return this.userService.findOne(id);
   }
 
@@ -40,4 +52,11 @@ export class UserController {
   async getUserOwnedGames(@Param('id', ParseIntPipe) userId: number): Promise<Game[]> {
     return this.userService.getOwnedGames(userId);
   }
+
+  @Get(':id/fav-games')
+  async getUserFavGames(@Param('id', ParseIntPipe) userId: number): Promise<Game[]> {
+    return this.userService.getFavGames(userId);
+  }
+
+
 }
