@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { EventGame } from '../event/event.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Spot {
@@ -26,4 +27,7 @@ export class Spot {
   
   @OneToMany(() => EventGame, (event) => event.spot)
   eventGames: EventGame[];
+
+  @ManyToMany(() => User, (user) => user.favSpots)
+  favouritedBy: User[];
 }

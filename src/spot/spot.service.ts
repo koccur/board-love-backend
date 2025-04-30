@@ -7,9 +7,7 @@ import { CreateSpotDto, UpdateSpotDto } from './spot.interface';
 @Injectable()
 export class SpotService {
   constructor(
-    @InjectRepository(Spot)
-    private spotRepository: Repository<Spot>,
-  ) {}
+    @InjectRepository(Spot) private readonly spotRepository: Repository<Spot>) { }
 
   async create(createSpotDto: CreateSpotDto): Promise<Spot> {
     const newSpot = this.spotRepository.create(createSpotDto);
@@ -21,7 +19,7 @@ export class SpotService {
   }
 
   async findOne(id: number): Promise<Spot> {
-    return await this.spotRepository.findOne({where:{id}});
+    return await this.spotRepository.findOne({ where: { id } });
   }
 
   async update(id: number, updateSpotDto: UpdateSpotDto): Promise<Spot> {

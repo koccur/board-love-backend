@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, ManyToMan
 import { Game } from '../game/game.entity';
 import { IsOptional, Max, Min } from 'class-validator';
 import { EventGame } from '../event/event.entity';
+import { Spot } from '../spot/spot.entity';
 
 @Entity({name:'user'})
 export class User {
@@ -30,6 +31,7 @@ export class User {
   @JoinTable()
   ownedGames: Game[];
 
+  // todo: double check if ownedGames and favGames working properly  
   @ManyToMany(() => Game, (game) => game.users)
   @JoinTable()
   favGames: Game[];
@@ -47,5 +49,19 @@ export class User {
      inverseJoinColumn: { name: 'friendId', referencedColumnName: 'id' },
    })
    friends: User[];
+
+   @ManyToMany(() => Spot, { cascade: true })
+   @JoinTable({
+     name: 'user_fav_spots',
+     joinColumn: {
+       name: 'userId',
+       referencedColumnName: 'id',
+     },
+     inverseJoinColumn: {
+       name: 'spotId',
+       referencedColumnName: 'id',
+     },
+   })
+   favSpots: Spot[];
 }
 

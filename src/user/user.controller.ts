@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto, FriendUser, UpdateUserDto } from './user.interface';
 import { Game } from '../game/game.entity';
+import { Spot } from '../spot/spot.entity';
 
 @Controller('users')
 export class UserController {
@@ -23,12 +24,25 @@ export class UserController {
     return this.userService.findFriends(friendName, userId);
   }
 
+  @Get('/favspots')
+  async findFavSpots(@Query('userId') userId: number,
+    @Query('name') spotName: string): Promise<Spot[]> {
+    return this.userService.getFavSpots(userId, spotName);
+  }
+
   // todo: via loggedToken not it and fix model
   @Post(':id/add-friend')
   async addFriend(@Param('id') id: number,
   @Body() dto: any): Promise<User> {
     return this.userService.addFriend(id,dto.friendId);
   }
+
+    // todo: via loggedToken not it and fix model
+    @Delete(':id/remove-friend/:friendId')
+    async removeFriend(@Param('id') id: number,
+    @Param('friendId') friendId: number): Promise<User> {
+      return this.userService.removeFriend(id,friendId);
+    }
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<FriendUser> {
@@ -58,5 +72,22 @@ export class UserController {
     return this.userService.getFavGames(userId);
   }
 
+    // todo consider move all related to loggedUser data to userService 
+  // todo: via loggedToken not it and fix model
+  @Post(':userId/fav-spot')
+  async addFavouriteSpot(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() dto: any,
+  ): Promise<User> {
+    return this.userService.addFavouriteSpot(userId, dto.spotId);
+  }
+  
+  @Delete(':userId/fav-spot/:spotId')
+  async removeFavouriteSpot(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('spotId', ParseIntPipe) spotId: number,
+  ): Promise<User> {
+    return this.userService.removeFavouriteSpot(userId, spotId);
+  }
 
 }
