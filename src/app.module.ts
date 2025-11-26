@@ -9,6 +9,7 @@ import { User } from './user/user.entity';
 import { GameGenre } from './game/game-genre.entity';
 import { EventModule } from './event/event.module';
 import { EventGame } from './event/event.entity';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -24,11 +25,12 @@ import { EventGame } from './event/event.entity';
       password: "admin666ADMIN123",
       synchronize: true,
       host: 'localhost',
-      entities:[Game,Spot,User,EventGame,GameGenre]
+      entities: [Game, Spot, User, EventGame, GameGenre]
     }),
-    EventModule
+    EventModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

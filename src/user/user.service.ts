@@ -2,20 +2,22 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Like, Repository } from 'typeorm';
 import { User } from './user.entity';
-import { CreateUserDto, FriendUser, UpdateUserDto } from './user.interface';
+import { AuthUser, CreateUserDto, FriendUser, UpdateUserDto } from './user.interface';
 import { Game } from '../game/game.entity';
 import { Spot } from '../spot/spot.entity';
+import { AuthService } from './../auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Spot) private readonly spotRepository: Repository<Spot>,
+    private authService: AuthService,
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const newUser = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(newUser);
+    return await this.userRepository.save({ ...newUser, password: this.authService.saltPassoword(newUser.password) });
   }
 
   async findAll(name: string): Promise<User[]> {
@@ -33,6 +35,15 @@ export class UserService {
   async findOne(id: number): Promise<FriendUser> {
     const user = await this.userRepository.findOne({ where: { id } });
     return { name: user.username, id: user.id };
+  }
+
+  async findOneByEmail(email: string): Promise<AuthUser> {
+    const user = await this.userRepository.findOneBy({ email: ILike(email) });
+    if (user == null) {
+      // todo is optimal way to return that message, security reason?
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return { username: user.username, email: user.email, password: user.password, id: user.id };
   }
 
   async findFriends(friendName: string, userId: number): Promise<User[]> {
@@ -144,7 +155,7 @@ export class UserService {
         spotName?.trim()
           ? '(LOWER(favSpot.name) LIKE :search)'
           : '1=1',
-          spotName?.trim()
+        spotName?.trim()
           ? { search: `%${spotName.toLowerCase()}%`, userId }
           : { userId },
       )

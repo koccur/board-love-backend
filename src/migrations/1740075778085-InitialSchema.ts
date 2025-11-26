@@ -15,9 +15,9 @@ export class InitialSchema1740075778085 implements MigrationInterface {
         `);
 
         await queryRunner.query(`
-                      INSERT INTO "spot" (name, description, location,"openDays","openHour","closeHour")
-            VALUES ('Farma Konstantego', 'Super miejsce', 'Farma 123',NULL,8,20),
-            ('Szara 39', 'Gdansk rulez', 'Szara 39',NULL,12,24);
+                      INSERT INTO "spot" (name, description, "locationLat","locationLng","openDays","openHour","closeHour")
+            VALUES ('Farma Konstantego', 'Super miejsce', '54.42165207669877','18.497646473364007',NULL,8,20),
+            ('Szara 39', 'Gdansk rulez', '54.348515839301776', '18.61429203020348',NULL,12,24);
       `);    
     await queryRunner.query(`
           INSERT INTO "game" (title, description,"releaseDate", "numberOfPlayers", time, "ageRestriction","game_genre") 

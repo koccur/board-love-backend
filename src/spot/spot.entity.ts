@@ -14,7 +14,10 @@ export class Spot {
   description: string;
 
   @Column()
-  location: string;
+  locationLat: string;
+
+  @Column()
+  locationLng: string;
 
   @Column({ nullable: true })
   openDays: string;

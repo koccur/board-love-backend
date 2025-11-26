@@ -42,6 +42,6 @@ export class EventGame {
   @Column({ type: 'boolean', default: false })
   isPrivate: boolean;
 
-  @ManyToOne(() => Spot, (location) => location.eventGames, { nullable: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Spot, (place) => place.eventGames, { nullable: true, onDelete: 'CASCADE' })
   spot: Spot;
 }
