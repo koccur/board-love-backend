@@ -11,6 +11,7 @@ export interface CreateUserDto {
 export interface UpdateUserDto {
   username?: string;
   email?: string;
+  password?:string;
   ownedGames?: Game[];
 }
 

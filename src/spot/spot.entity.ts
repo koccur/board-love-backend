@@ -13,10 +13,10 @@ export class Spot {
   @Column({ nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   locationLat: string;
 
-  @Column()
+  @Column({ nullable: true })
   locationLng: string;
 
   @Column({ nullable: true })

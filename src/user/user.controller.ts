@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto, FriendUser, UpdateUserDto } from './user.interface';
+import { AuthUser, CreateUserDto, FriendUser, UpdateUserDto } from './user.interface';
 import { Game } from '../game/game.entity';
 import { Spot } from '../spot/spot.entity';
 import { AuthGuard } from '../auth/auth.guard';
@@ -10,11 +10,6 @@ import { AuthGuard } from '../auth/auth.guard';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) { }
-
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.create(createUserDto);
-  }
 
   @Get()
   async findAll(@Query('name') name?: string): Promise<User[]> {

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { UpdatePasswordDto } from '../user/user.interface';
+import { AuthUser, CreateUserDto, UpdatePasswordDto } from '../user/user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -23,5 +23,11 @@ export class AuthController {
   @Get('change-password')
   changePassword(@Body() changePassword: UpdatePasswordDto) {
     return this.authService.changePassword(changePassword);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('create')
+  async create(@Body() createUserDto: CreateUserDto): Promise<AuthUser> {
+    return this.authService.create(createUserDto);
   }
 }
