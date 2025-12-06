@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpCode, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthUser, CreateUserDto, UpdatePasswordDto } from '../user/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { User } from '../user/user.entity';
+import { of } from 'rxjs';
 const bcrypt = require('bcrypt');
 
 @Injectable()
@@ -15,7 +16,7 @@ export class AuthService {
 
   async signIn(email: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.userRepository.findOneBy({ email: ILike(email) });
-    if (user?.password !== pass) {
+    if (!bcrypt.compareSync(pass,user?.password)) {
       throw new UnauthorizedException();
     }
     const payload = { sub: user.id, username: user.username };
@@ -30,12 +31,21 @@ export class AuthService {
   }
 
   saltPassoword(password: string): string {
+    return bcrypt
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   }
 
 async create(createUserDto: CreateUserDto): Promise<AuthUser> {
     const newUser = this.userRepository.create(createUserDto);
-    return await this.userRepository.save({ ...newUser, password: this.saltPassoword(newUser.password) });
+    let result;
+    try {
+      const saltedPassword = this.saltPassoword(newUser.password);
+      result = await this.userRepository.save({ ...newUser, password: this.saltPassoword(newUser.password) });
+      result = of({message:"Account has been created successfully"});
+    } catch (error) {
+      result = of({message:"Account cannot be created, email is in use"});
+    }
+    return  result
   }
 }
 
