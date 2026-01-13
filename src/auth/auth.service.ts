@@ -1,4 +1,4 @@
-import { HttpCode, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpCode, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthUser, CreateUserDto, UpdatePasswordDto } from '../user/user.interface';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +15,11 @@ export class AuthService {
   ) { }
 
   async signIn(email: string, pass: string): Promise<{ access_token: string }> {
+    debugger;
     const user = await this.userRepository.findOneBy({ email: ILike(email) });
+    if (user === null || user.email !== email) {
+      throw new NotFoundException('User with this email does not exist');
+    }
     if (!bcrypt.compareSync(pass,user?.password)) {
       throw new UnauthorizedException();
     }
